@@ -10,6 +10,10 @@ AWS.config.update({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 })
 app.use(express.json())
+
+app.get("/test",(req,res)=>{
+  return res.status(200).json({message:"Test route"})
+})
 app.use("/admin", require("./routes/adminRoutes"))
 
 const PORT = process.env.PORT || 8080
@@ -17,3 +21,5 @@ const PORT = process.env.PORT || 8080
 app.listen(PORT, () => {
   console.log(`App is listining on port ${PORT}`)
 })
+
+module.exports= app

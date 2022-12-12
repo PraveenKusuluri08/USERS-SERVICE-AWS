@@ -1,1 +1,64 @@
 name: Test and Deploy
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches: 
+      - master
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-lastest
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Nodejs ${{matrix.node-version}}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{matrix.node-version}}
+      - run: npm ci
+      - run: npm test
+  
+  build:
+    runs-on: ubuntu-lastest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v3
+      - 
+        name: Build Docker image
+        run: docker build -t user-service-aws -f Dockerfile .
+      -
+        name: Generate Deployment package
+        run: zip -r deploy.zip *
+      -
+        name: Get Timestamp
+        uses: gerred/actions/current-time@master
+        id: current-time
+
+      - name: Run string replace
+        uses: frabert/replace-string-action@master
+        id: format-time
+        with:
+         pattern: '[:\.]+'
+         string: "${{ steps.current-time.outputs.time }}"
+         replace-with: '-'
+         flags: 'g'
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v14
+        with:
+          aws_access_key: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws_secret_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          application_name: users-microservice-cloud
+          environment_name: Usersmicroservicecloud-env
+          version_label: "users-microservice-cloud-${{steps.format-time.outputs.replaced}}"
+          region: us-east-1
+          deployment_package: deploy.zip
+        
+          
+

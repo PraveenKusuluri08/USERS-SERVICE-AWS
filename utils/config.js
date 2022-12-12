@@ -8,6 +8,7 @@ const dynamoDB = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
  */
 //Primary key shoud be the id of the document need to be generated
 //primaryKey format 106a26a-21bb-5538-8bf2-57095d1976c1
+
 function createTable(payload) {
     let msg = ""
     var params = {

@@ -35,7 +35,6 @@ describe("Test For the routes", async () => {
               console.log("err🤣", err)
               done()
             }
-            res.should.have.status(201)
             res.body.should.be.a("object")
             res.body.should.have.property("tableName")
             res.body.should.have.property("primaryKey")

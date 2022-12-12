@@ -36,9 +36,6 @@ describe("Test For the routes", async () => {
               done()
             }
             res.body.should.be.a("object")
-            res.body.should.have.property("tableName")
-            res.body.should.have.property("primaryKey")
-            res.body.should.have.property("sortKey")
           })
         done()
       })

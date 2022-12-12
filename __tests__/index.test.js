@@ -18,13 +18,12 @@ describe("Test For the routes", async () => {
           return
         })
       done()
-      process.exit(1)
     })
   })
 })
 
 describe("Tests the admin route", () => {
-  describe("Test /admin/createTable", (done) => {
+  describe("Test /admin/createTable", async(done) => {
     it("Test to test the admin route create table", (done) => {
       chai
         .request(app)
@@ -43,7 +42,7 @@ describe("Tests the admin route", () => {
           res.body.should.be.a("object")
         })
       done()
-      process.exit(1)
+      return
     }) 
   })
 })
